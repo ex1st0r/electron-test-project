@@ -11,13 +11,8 @@
   "license": "MIT",
   "main": "main.js",
   "scripts": {
-    "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
-    "dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
-    "build": "webpack --config webpack.build.config.js",
-    "package": "webpack --config webpack.build.config.js",
-    "postpackage": "electron-packager ./ --out=./builds",
-    "postinstall": "install-app-deps",
-    "rebuild": "./node_modules/.bin/electron-rebuild  -f -w sqlite3"
+    "start": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.config.js",
+    "postinstall": "install-app-deps"
   },
   "devDependencies": {
     "@types/prop-types": "^15.5.5",

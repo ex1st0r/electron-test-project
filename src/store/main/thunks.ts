@@ -1,5 +1,6 @@
-import { common as commonUtils } from '../../utils'
 import { Dispatch } from 'redux'
+
+import { common as commonUtils } from '../../utils'
 import * as actions from './actions'
 
 export const setRandomColor = () => (dispatch: Dispatch) => {
