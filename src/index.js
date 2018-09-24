@@ -1,30 +1,22 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createStore } from 'redux'
+import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux'
-import { syncHistoryWithStore } from 'react-router-redux'
 
-import App from './components/App'
-import reducer from './store'
+import { App } from './components'
+import configureStore from './store/configureStore'
 
-const store = createStore(reducer)
+const { store, persistor } = configureStore()
 
-// Since we are using HtmlWebpackPlugin WITHOUT a template, we should create our own root node in the body element before rendering into it
 let root = document.createElement('div')
 root.id = 'root'
 document.body.appendChild( root )
 
-const history = syncHistoryWithStore(browserHistory, store)
-
-// Now we can render our application into it
 render(
   <Provider store={store}>
-    <Router history={history}>
-      <Route path="/" component={App}>
-        <Route path="foo" component={Foo}/>
-        <Route path="bar" component={Bar}/>
-      </Route>
-    </Router>
+    <PersistGate loading={null} persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>,
   document.getElementById('root')
-);
+)
