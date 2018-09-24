@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/prop-types": "^15.5.5",
+    "@types/react-dom": "^16.0.7",
     "@types/react-redux": "^6.0.9",
     "@types/redux-thunk": "^2.1.0",
     "babel-core": "^6.24.1",

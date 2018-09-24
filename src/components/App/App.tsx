@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {Dispatch, Action, AnyAction} from 'redux'
 
 import { IState } from '../../store'
 import * as mainThunks from '../../store/main/thunks'
