@@ -12,6 +12,10 @@ const defaultInclude = [SRC_DIR];
 
 module.exports = {
   entry: SRC_DIR + '/index.tsx',
+  externals: {
+    sqlite3: 'require("sqlite3")',
+    typeorm: 'require("typeorm")',
+  },
   output: {
     path: OUTPUT_DIR,
     publicPath: '/',
@@ -66,7 +70,10 @@ module.exports = {
     }),
   ],
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js'],
+    alias: {
+      typeorm: path.resolve(__dirname, "./node_modules/typeorm/typeorm-model-shim")
+    }
   },
   devtool: 'cheap-source-map',
   devServer: {
