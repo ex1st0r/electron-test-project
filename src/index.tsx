@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 
 import { App } from './components'
 import configureStore from './store/configureStore'
-import { Story } from './Entities/Story'
+import { Story } from './entities/Story'
 
 const { store, persistor } = configureStore()
 

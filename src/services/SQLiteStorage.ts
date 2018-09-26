@@ -1,5 +1,5 @@
 import {ConnectionOptions, createConnection } from 'typeorm'
-import { Story } from '../Entities/Story'
+import { Story } from '../entities/Story'
 
 export interface SQLiteStorageConfig {
   database: string;
