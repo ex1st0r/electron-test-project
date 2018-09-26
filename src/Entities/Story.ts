@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryColumn} from 'typeorm'
+import { Entity, Column, PrimaryColumn, BaseEntity } from 'typeorm'
 
 @Entity()
 export class Story {
@@ -7,4 +7,5 @@ export class Story {
 
   @Column()
   value: string;
+
 }

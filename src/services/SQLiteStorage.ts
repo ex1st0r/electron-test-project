@@ -1,32 +1,34 @@
-import { createConnection, getConnection, ConnectionOptions } from 'typeorm'
+import {ConnectionOptions, createConnection } from 'typeorm'
 import { Story } from '../Entities/Story'
 
-const sConfig: ConnectionOptions = {
-  type: 'sqlite',
-  name: 'default',
-  synchronize: true,
-  logging: true,
-  logger: 'simple-console',
-  database: 'database.sqlite',
+export interface SQLiteStorageConfig {
+  database: string;
+  logging?: boolean;
+  logger?: ConnectionOptions["logger"];
 }
 
-export default function SQLiteStorage(config = sConfig) {
+
+export default function SQLiteStorage(config?: SQLiteStorageConfig) {
+
+  const storageEntity = Story
 
   const dbConnection = createConnection({
+    database: 'temp/sqliteStorage.db',
+    type: 'sqlite',
+    synchronize: true,
+    logging: false,
     ...config,
-    entities: [Story]
+    entities: [ storageEntity ],
   })
 
   const getItem = (key: string) => {
     return dbConnection
       .then(async connection => {
-      const storyRepository = connection.getRepository('Story')
+        const storyRepository = connection.getRepository(storageEntity.name)
 
-      const story = await storyRepository.findOne(key)
+        const story: any = await connection.getRepository(storageEntity.name).findOne(key)
 
-      console.log('getItem', story)
-
-      return story.value
+        return story && story.value
       })
       .catch((err) => console.error(err))
   }
@@ -34,20 +36,14 @@ export default function SQLiteStorage(config = sConfig) {
   const setItem = (key: string, item: string) => {
     return dbConnection
       .then(async connection => {
-      const storyRepository = connection.getRepository('Story')
+        const storyRepository = connection.getRepository(storageEntity.name)
 
-      const story = new Story()
+        const story = new Story()
 
-      story.key = key
-      story.value = item
-      // const storyToUpdate =  await storyRepository.findOne(key)
-      // console.log('setItem to update', storyToUpdate)
-      // storyToUpdate.value = item
-      //
-      const res = await storyRepository.save(story);
+        story.key = key
+        story.value = item
 
-      console.log('setItem', res)
-      return res
+        return storyRepository.save(story)
     })
       .catch((err) => console.error(err))
   }
@@ -55,22 +51,47 @@ export default function SQLiteStorage(config = sConfig) {
   const removeItem = (key: string) => {
     return dbConnection
       .then(async connection => {
-      const storyRepository = connection.getRepository('Story')
+        const storyRepository = connection.getRepository(storageEntity.name)
 
-      const storyToRemove = storyRepository.findOne(key)
+        const storyToRemove = await storyRepository.findOne(key)
 
-      const story = await storyRepository.remove(storyToRemove)
-
-      console.log('remoteItem', story)
-
-      return story
+        return storyRepository.remove(storyToRemove)
     })
       .catch((err) => console.error(err))
   }
+
+  const getAllKeys = () => {
+    return dbConnection
+      .then(async connection => {
+        const storyRepository = connection.getRepository(storageEntity.name)
+
+        const stories = await storyRepository.find()
+
+        return stories.map((story: Story) => story.key)
+
+      })
+      .catch((err) => console.error(err))
+  }
+
+  const clear = () => {
+    return dbConnection
+      .then(async connection => {
+        const storyRepository = connection.getRepository(storageEntity.name)
+
+        const storageEntityMetadata = connection.getMetadata(storageEntity)
+
+        return storyRepository.query(`DELETE FROM \`${storageEntityMetadata.tableName}\`;`);
+      })
+      .catch((err) => console.error(err))
+  }
+
+
 
   return {
     getItem,
     removeItem,
     setItem,
+    clear,
+    getAllKeys,
   }
 }
