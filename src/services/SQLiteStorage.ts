@@ -4,7 +4,7 @@ import { Story } from '../entities/Story'
 export interface SQLiteStorageConfig {
   database: string;
   logging?: boolean;
-  logger?: ConnectionOptions["logger"];
+  logger?: ConnectionOptions['logger'];
 }
 
 
